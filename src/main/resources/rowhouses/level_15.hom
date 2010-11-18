@@ -1,0 +1,30 @@
+<houseofmirrors>
+    <description>Level 15.<br/><br/>Strength in Unity</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Source color="white" direction="Southwest" y="0" x="14"></Source>
+        <Blocker y="11" x="14"></Blocker>
+        <Blocker y="13" x="14"></Blocker>
+        <Blocker y="13" x="10"></Blocker>
+        <Blocker y="4" x="3"></Blocker>
+        <Blocker y="6" x="3"></Blocker>
+        <Blocker y="10" x="13"></Blocker>
+        <Blocker y="8" x="3"></Blocker>
+        <Blocker y="12" x="13"></Blocker>
+        <Blocker y="13" x="12"></Blocker>
+        <Blocker y="14" x="13"></Blocker>
+        <Blocker y="11" x="10"></Blocker>
+        <Blocker y="11" x="12"></Blocker>
+        <Detector green="required" red="required" blue="required" y="12" x="12"></Detector>
+        <Detector green="required" red="required" blue="unwanted" y="9" x="5"></Detector>
+        <Detector green="required" red="unwanted" blue="required" y="8" x="4"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Prism direction="South" y="0" x="1"></Prism>
+        <Prism direction="South" y="0" x="0"></Prism>
+        <Mirror direction="East" y="2" x="0"></Mirror>
+        <PartialMirror direction="East" y="1" x="1"></PartialMirror>
+        <CrossMirror direction="East" y="1" x="0"></CrossMirror>
+        <CrossMirror direction="East" y="2" x="1"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

@@ -1,0 +1,85 @@
+<houseofmirrors>
+    <description>
+        Level 13.<br/><br/>"Abhimanyu in Chakravyuha"<br/><br/>This could get a bit "long winded"!
+    </description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Conduit direction="North" y="11" x="12"></Conduit>
+        <Conduit direction="North" y="10" x="12"></Conduit>
+        <Conduit direction="North" y="9" x="12"></Conduit>
+        <Conduit direction="North" y="8" x="12"></Conduit>
+        <Conduit direction="North" y="7" x="12"></Conduit>
+        <Conduit direction="North" y="6" x="12"></Conduit>
+        <Conduit direction="North" y="5" x="12"></Conduit>
+        <Conduit direction="North" y="4" x="12"></Conduit>
+        <Conduit direction="North" y="3" x="12"></Conduit>
+        <Conduit direction="North" y="2" x="12"></Conduit>
+        <Conduit direction="North" y="1" x="12"></Conduit>
+        <Conduit direction="North" y="11" x="13"></Conduit>
+        <Conduit direction="North" y="10" x="13"></Conduit>
+        <Conduit direction="North" y="9" x="13"></Conduit>
+        <Conduit direction="North" y="8" x="13"></Conduit>
+        <Conduit direction="North" y="7" x="13"></Conduit>
+        <Conduit direction="North" y="6" x="13"></Conduit>
+        <Conduit direction="North" y="5" x="13"></Conduit>
+        <Conduit direction="North" y="4" x="13"></Conduit>
+        <Conduit direction="North" y="3" x="13"></Conduit>
+        <Conduit direction="North" y="2" x="13"></Conduit>
+        <Conduit direction="North" y="1" x="13"></Conduit>
+        <Blocker y="13" x="11"></Blocker>
+        <Blocker y="13" x="10"></Blocker>
+        <Blocker y="13" x="9"></Blocker>
+        <Blocker y="13" x="8"></Blocker>
+        <Blocker y="13" x="7"></Blocker>
+        <Blocker y="13" x="6"></Blocker>
+        <Blocker y="13" x="5"></Blocker>
+        <Blocker y="13" x="4"></Blocker>
+        <Blocker y="13" x="3"></Blocker>
+        <Blocker y="1" x="11"></Blocker>
+        <Blocker y="1" x="10"></Blocker>
+        <Blocker y="1" x="9"></Blocker>
+        <Blocker y="1" x="8"></Blocker>
+        <Blocker y="1" x="7"></Blocker>
+        <Blocker y="1" x="6"></Blocker>
+        <Blocker y="1" x="5"></Blocker>
+        <Blocker y="1" x="4"></Blocker>
+        <Blocker y="1" x="3"></Blocker>
+        <Blocker y="14" x="2"></Blocker>
+        <Blocker y="0" x="2"></Blocker>
+        <Detector green="unwanted" red="required" blue="unwanted" y="7" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="5" x="2"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="13" x="2"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="1" x="2"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="13" x="12"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="11" x="3"></Detector>
+        <Source color="red" direction="South" y="0" x="13"></Source>
+        <Conduit direction="North" y="3" x="5"></Conduit>
+        <Conduit direction="North" y="3" x="4"></Conduit>
+        <Conduit direction="Northwest" y="6" x="6"></Conduit>
+        <Conduit direction="Northwest" y="5" x="5"></Conduit>
+        <Conduit direction="Northwest" y="4" x="4"></Conduit>
+        <Conduit direction="Northwest" y="3" x="3"></Conduit>
+        <Conduit direction="North" y="6" x="5"></Conduit>
+        <Conduit direction="South" y="6" x="4"></Conduit>
+        <Conduit direction="Northwest" y="5" x="4"></Conduit>
+        <Conduit direction="West" y="4" x="3"></Conduit>
+        <Conduit direction="West" y="5" x="3"></Conduit>
+        <Conduit direction="Southwest" y="6" x="3"></Conduit>
+        <Conduit direction="Southeast" y="4" x="5"></Conduit>
+        <Conduit direction="East" y="4" x="6"></Conduit>
+        <Conduit direction="East" y="5" x="6"></Conduit>
+        <Conduit direction="Northeast" y="3" x="6"></Conduit>
+    </fixedGates>
+    <moveableGates>
+        <CrossMirror direction="West" y="7" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="6" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="1" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="4" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="2" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="3" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="5" x="14"></CrossMirror>
+        <Mirror direction="Southeast" y="8" x="14"></Mirror>
+        <Mirror direction="Southeast" y="9" x="14"></Mirror>
+        <CrossMirror direction="West" y="0" x="14"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

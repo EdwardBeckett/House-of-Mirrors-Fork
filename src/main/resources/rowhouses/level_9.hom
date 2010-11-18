@@ -1,0 +1,18 @@
+<houseofmirrors>
+    <description>
+        Level 9.<br/><br/>The CROSS MIRROR is so angled that it turns horizontal or vertical laser beams into diagonal ones, and vice-versa
+    </description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Source color="red" direction="East" y="10" x="0"></Source>
+        <Source color="green" direction="East" y="3" x="0"></Source>
+        <Detector green="required" red="unwanted" blue="unwanted" y="7" x="7"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="7" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="7" x="10"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <CrossMirror direction="West" y="14" x="12"></CrossMirror>
+        <CrossMirror direction="West" y="14" x="14"></CrossMirror>
+        <CrossMirror direction="West" y="14" x="13"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

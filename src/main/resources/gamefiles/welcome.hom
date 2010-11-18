@@ -1,0 +1,24 @@
+<houseofmirrors>
+    <description><font size="+1">Welcome to <em>HoM</em>!</font><br/><br/>Press PAGE_DOWN to go to the first level. Or open a game file from the Game menu</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Mirror direction="ne" y="10" x="4"></Mirror>
+        <Mirror direction="wn" y="10" x="9"></Mirror>
+        <Mirror direction="n" y="8" x="11"></Mirror>
+        <CrossMirror direction="s" y="6" x="9"></CrossMirror>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="sw" y="6" x="4"></Mirror>
+        <Mirror direction="ne" y="10" x="13"></Mirror>
+        <Mirror direction="sw" y="6" x="8"></Mirror>
+        <Mirror direction="wn" y="9" x="8"></Mirror>
+        <PartialMirror direction="es" y="6" x="1"></PartialMirror>
+        <Detector green="required" red="required" blue="required" y="10" x="14"></Detector>
+        <Detector green="required" red="required" blue="required" y="10" x="5"></Detector>
+        <Detector green="required" red="required" blue="required" y="9" x="9"></Detector>
+        <Source color="red" direction="e" y="6" x="5"></Source>
+        <Source color="white" direction="s" y="6" x="13"></Source>
+        <Source color="red" direction="n" y="9" x="5"></Source>
+        <Source color="white" direction="n" y="10" x="1"></Source>
+    </moveableGates>
+</houseofmirrors>

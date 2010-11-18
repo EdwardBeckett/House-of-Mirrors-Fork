@@ -1,0 +1,50 @@
+<houseofmirrors>
+    <description>Level 11.<br/><br/>CONDUITS only allow light to pass through in a particular direction.<br/><br/>Yes, this level can be solved!</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Conduit direction="Northwest" y="0" x="9"></Conduit>
+        <Conduit direction="Northwest" y="1" x="9"></Conduit>
+        <Conduit direction="Northwest" y="2" x="9"></Conduit>
+        <Conduit direction="Northwest" y="3" x="9"></Conduit>
+        <Conduit direction="Northwest" y="4" x="9"></Conduit>
+        <Conduit direction="Northwest" y="5" x="9"></Conduit>
+        <Conduit direction="Northwest" y="6" x="9"></Conduit>
+        <Conduit direction="Northwest" y="7" x="9"></Conduit>
+        <Conduit direction="Northwest" y="8" x="9"></Conduit>
+        <Conduit direction="Northwest" y="9" x="9"></Conduit>
+        <Conduit direction="Northwest" y="10" x="9"></Conduit>
+        <Conduit direction="Northwest" y="11" x="9"></Conduit>
+        <Conduit direction="Northwest" y="12" x="9"></Conduit>
+        <Conduit direction="Northwest" y="13" x="9"></Conduit>
+        <Conduit direction="Northwest" y="14" x="9"></Conduit>
+        <Conduit direction="Northwest" y="0" x="4"></Conduit>
+        <Conduit direction="Northwest" y="1" x="4"></Conduit>
+        <Conduit direction="Northwest" y="2" x="4"></Conduit>
+        <Conduit direction="Northwest" y="3" x="4"></Conduit>
+        <Conduit direction="Northwest" y="4" x="4"></Conduit>
+        <Conduit direction="Northwest" y="5" x="4"></Conduit>
+        <Conduit direction="Northwest" y="6" x="4"></Conduit>
+        <Conduit direction="Northwest" y="7" x="4"></Conduit>
+        <Conduit direction="Northwest" y="8" x="4"></Conduit>
+        <Conduit direction="Northwest" y="9" x="4"></Conduit>
+        <Conduit direction="Northwest" y="10" x="4"></Conduit>
+        <Conduit direction="Northwest" y="11" x="4"></Conduit>
+        <Conduit direction="Northwest" y="12" x="4"></Conduit>
+        <Conduit direction="Northwest" y="13" x="4"></Conduit>
+        <Conduit direction="Northwest" y="14" x="4"></Conduit>
+        <Detector green="unwanted" red="required" blue="unwanted" y="11" x="12"></Detector>
+        <Detector green="unwanted" red="required" blue="required" y="7" x="13"></Detector>
+        <Detector green="unwanted" red="unwanted" blue="required" y="8" x="3"></Detector>
+        <Detector green="unwanted" red="unwanted" blue="required" y="9" x="6"></Detector>
+        <Detector green="unwanted" red="required" blue="required" y="7" x="6"></Detector>
+        <Source color="red" direction="South" y="0" x="13"></Source>
+        <Source color="blue" direction="North" y="14" x="0"></Source>
+    </fixedGates>
+    <moveableGates>
+        <CrossMirror direction="Northeast" y="4" x="14"></CrossMirror>
+        <Mirror direction="North" y="0" x="14"></Mirror>
+        <Mirror direction="North" y="1" x="14"></Mirror>
+        <PartialMirror direction="North" y="3" x="14"></PartialMirror>
+        <CrossMirror direction="Northeast" y="2" x="14"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

@@ -1,0 +1,15 @@
+<houseofmirrors >
+    <description>The solved demo to get you started</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Source direction="ne" y="5" x="2" color="white"></Source>
+        <Detector y="1" x="6" red="required" green="required" blue="required"></Detector>
+        <Detector y="1" x="12" red="required" green="required" blue="required"></Detector>
+        <Detector y="1" x="2" red="required" green="required" blue="required"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="n" y="5" x="8"></Mirror>
+        <PartialMirror direction="w" y="3" x="4"></PartialMirror>
+        <PartialMirror direction="n" y="2" x="5"></PartialMirror>
+    </moveableGates>
+</houseofmirrors>

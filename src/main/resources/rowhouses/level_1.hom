@@ -1,0 +1,14 @@
+<houseofmirrors>
+    <description>
+        Level 1.<br/><br/>Move the MIRROR into the path of the RED laser beam. Click to rotate it.<br/><br/>Position the mirror correctly so that the laser beam is reflected onto the detector.
+        <br/><br/>Until this level is completed you won't be able to go to the next level
+    </description>
+    <bounds width="10" height="10"></bounds>
+    <fixedGates>
+        <Source color="red" direction="East" y="4" x="0"></Source>
+        <Detector green="unwanted" red="required" blue="unwanted" y="1" x="4"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="Northeast" y="7" x="4"></Mirror>
+    </moveableGates>
+</houseofmirrors>

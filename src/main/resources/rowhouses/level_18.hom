@@ -1,0 +1,23 @@
+<houseofmirrors>
+    <description>
+        Level 18. <br/><br/>An easy one. <br/><br/>Just a taste of things to come!
+    </description>
+    <bounds width="12" height="12"></bounds>
+    <fixedGates>
+        <Detector green="unwanted" red="unwanted" blue="required" y="5" x="4"></Detector>
+        <Detector green="required" red="unwanted" blue="unwanted" y="11" x="6"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="5" x="8"></Detector>
+        <Source color="blue" direction="South" y="1" x="10"></Source>
+        <Source color="red" direction="South" y="1" x="1"></Source>
+        <Source color="green" direction="South" y="1" x="6"></Source>
+        <Blocker y="7" x="6" />
+        <Blocker y="7" x="5" />
+        <Blocker y="7" x="7" />
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="Northeast" y="11" x="0"></Mirror>
+        <Mirror direction="Northwest" y="11" x="3"></Mirror>
+        <WormHole x2="1" y2="8" x1="3" y1="9"></WormHole>
+        <WormHole x2="3" y2="9" x1="1" y1="8"></WormHole>
+    </moveableGates>
+</houseofmirrors>

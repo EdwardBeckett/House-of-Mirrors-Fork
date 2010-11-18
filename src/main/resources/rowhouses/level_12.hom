@@ -1,0 +1,23 @@
+<houseofmirrors>
+    <description>Bonus level! You may skip it. Solving it will unlock an additional level.</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Detector green="unwanted" red="required" blue="unwanted" y="11" x="14"></Detector>
+        <Detector green="unwanted" red="unwanted" blue="required" y="7" x="6"></Detector>
+        <Detector green="required" red="unwanted" blue="unwanted" y="7" x="4"></Detector>
+        <Detector green="required" red="required" blue="required" y="12" x="14"></Detector>
+        <Detector green="required" red="required" blue="required" y="10" x="14"></Detector>
+        <Source color="red" direction="East" y="5" x="0"></Source>
+        <Source color="blue" direction="North" y="14" x="8"></Source>
+        <Source color="green" direction="West" y="7" x="14"></Source>
+        <Source color="white" direction="Southeast" y="0" x="4"></Source>
+        <Source color="white" direction="Southeast" y="0" x="3"></Source>
+        <Source color="white" direction="Southeast" y="0" x="2"></Source>
+        <Conduit direction="West" y="7" x="7"></Conduit>
+    </fixedGates>
+    <moveableGates>
+        <CrossMirror direction="North" y="0" x="14"></CrossMirror>
+        <Mirror direction="South" y="1" x="14"></Mirror>
+        <CrossMirror direction="Northeast" y="0" x="13"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

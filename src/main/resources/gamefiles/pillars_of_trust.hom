@@ -1,0 +1,39 @@
+<houseofmirrors>
+    <description>Pillars of trust<br/>Designed by HRJ</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Blocker y="1" x="3"></Blocker>
+        <Blocker y="2" x="3"></Blocker>
+        <Blocker y="3" x="3"></Blocker>
+        <Blocker y="4" x="3"></Blocker>
+        <Blocker y="5" x="3"></Blocker>
+        <Blocker y="6" x="3"></Blocker>
+        <Blocker y="8" x="3"></Blocker>
+        <Blocker y="9" x="3"></Blocker>
+        <Blocker y="10" x="3"></Blocker>
+        <Blocker y="11" x="3"></Blocker>
+        <Blocker y="12" x="3"></Blocker>
+        <Blocker y="13" x="3"></Blocker>
+        <Blocker y="1" x="10"></Blocker>
+        <Blocker y="2" x="10"></Blocker>
+        <Blocker y="3" x="10"></Blocker>
+        <Blocker y="4" x="10"></Blocker>
+        <Blocker y="10" x="10"></Blocker>
+        <Blocker y="5" x="10"></Blocker>
+        <Blocker y="7" x="10"></Blocker>
+        <Blocker y="8" x="10"></Blocker>
+        <Blocker y="9" x="10"></Blocker>
+        <Detector y="12" x="8" red="required" green="required" blue="required"></Detector>
+        <Detector y="4" x="6" red="required" green="required" blue="required"></Detector>
+        <Detector y="9" x="13" red="required" green="required" blue="required"></Detector>
+        <Detector y="8" x="4" red="required" green="required" blue="required"></Detector>
+        <Detector y="10" x="8" red="required" green="required" blue="required"></Detector>
+        <Source direction="n" y="13" x="6" color="white"></Source>
+        <Source direction="n" y="13" x="0" color="white"></Source>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="n" y="14" x="13"></Mirror>
+        <PartialMirror direction="n" y="14" x="12"></PartialMirror>
+        <CrossMirror direction="n" y="14" x="14"></CrossMirror>
+    </moveableGates>
+</houseofmirrors>

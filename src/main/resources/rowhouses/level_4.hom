@@ -1,0 +1,18 @@
+<houseofmirrors>
+    <description>
+        Level 4.<br/><br/>The partial-mirror is only half-coated. So, it both reflects AND transmits light. Play with it to solve this level.
+    </description>
+    <bounds width="12" height="12"></bounds>
+    <fixedGates>
+        <Source color="red" direction="South" y="0" x="5"></Source>
+        <Detector green="unwanted" red="required" blue="unwanted" y="10" x="5"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="8" x="1"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="3" x="3"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="6" x="9"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <PartialMirror direction="West" y="0" x="0"></PartialMirror>
+        <PartialMirror direction="West" y="0" x="1"></PartialMirror>
+        <Mirror direction="West" y="1" x="0"></Mirror>
+    </moveableGates>
+</houseofmirrors>

@@ -1,0 +1,18 @@
+<houseofmirrors >
+    <description>Level 5.<br/><br/>Do or DIE!<br/><br/>In this level, the mirrors are fixed, but the light sources may be moved and rotated!
+    <br/><br/>In general, anything which is not within circles can be freely moved</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Mirror direction="South" y="3" x="4"></Mirror>
+        <PartialMirror direction="West" y="6" x="7"></PartialMirror>
+        <Detector y="7" x="6" red="unwanted" green="required" blue="unwanted"></Detector>
+        <Detector y="4" x="5" red="unwanted" green="required" blue="unwanted"></Detector>
+        <Detector y="11" x="12" red="unwanted" green="required" blue="unwanted"></Detector>
+        <Detector y="6" x="2" red="unwanted" green="required" blue="unwanted"></Detector>
+        <Detector y="6" x="10" red="unwanted" green="required" blue="unwanted"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Source direction="Northwest" y="14" x="8" color="green"></Source>
+        <Source direction="Northeast" y="14" x="6" color="green"></Source>
+    </moveableGates>
+</houseofmirrors>

@@ -1,0 +1,24 @@
+<houseofmirrors>
+    <description><font size="+1">Welcome to&#x00A0;<em>HoM</em>!</font><br/><br/>Press PAGE_DOWN to go to the first level.</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Mirror direction="Northeast" y="10" x="4"></Mirror>
+        <Mirror direction="Northwest" y="10" x="9"></Mirror>
+        <Mirror direction="North" y="8" x="11"></Mirror>
+        <CrossMirror direction="South" y="6" x="9"></CrossMirror>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="Southwest" y="6" x="4"></Mirror>
+        <Mirror direction="Northeast" y="10" x="13"></Mirror>
+        <Mirror direction="Southwest" y="6" x="8"></Mirror>
+        <Mirror direction="Northwest" y="9" x="8"></Mirror>
+        <PartialMirror direction="Southeast" y="6" x="1"></PartialMirror>
+        <Detector green="required" red="required" blue="required" y="10" x="14"></Detector>
+        <Detector green="required" red="required" blue="required" y="10" x="5"></Detector>
+        <Detector green="required" red="required" blue="required" y="9" x="9"></Detector>
+        <Source color="red" direction="East" y="6" x="5"></Source>
+        <Source color="white" direction="South" y="6" x="13"></Source>
+        <Source color="red" direction="North" y="9" x="5"></Source>
+        <Source color="white" direction="North" y="10" x="1"></Source>
+    </moveableGates>
+</houseofmirrors>

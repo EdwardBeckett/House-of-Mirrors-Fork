@@ -1,0 +1,16 @@
+<houseofmirrors>
+    <description>
+        Level 3.<br/><br/>The RED detector only accepts RED light and the BLUE detector, only blue.<br/><br/>Block the RED light from reaching the BLUE detector using the mirror. And oh! You also need to light both the RED detectors.
+    </description>
+    <bounds width="10" height="10"></bounds>
+    <fixedGates>
+        <Source color="red" direction="East" y="4" x="0"></Source>
+        <Source color="blue" direction="Southwest" y="1" x="9"></Source>
+        <Detector green="unwanted" red="required" blue="unwanted" y="7" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="4" x="2"></Detector>
+        <Detector green="unwanted" red="unwanted" blue="required" y="4" x="6"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="North" y="0" x="0"></Mirror>
+    </moveableGates>
+</houseofmirrors>

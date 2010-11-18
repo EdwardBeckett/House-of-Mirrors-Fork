@@ -1,0 +1,32 @@
+<houseofmirrors>
+    <description>Level 16.<br/><br/>Freedom</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Blocker y="6" x="9"></Blocker>
+        <Blocker y="6" x="11"></Blocker>
+        <Blocker y="5" x="8"></Blocker>
+        <Blocker y="6" x="10"></Blocker>
+        <Blocker y="6" x="7"></Blocker>
+        <Blocker y="4" x="8"></Blocker>
+        <Blocker y="6" x="5"></Blocker>
+        <Blocker y="6" x="6"></Blocker>
+        <Detector green="required" red="unwanted" blue="required" y="2" x="4"></Detector>
+        <Detector green="required" red="required" blue="required" y="1" x="3"></Detector>
+        <Detector green="unwanted" red="required" blue="required" y="7" x="7"></Detector>
+        <CrossMirror direction="Southwest" y="0" x="14"></CrossMirror>
+        <Source color="blue" direction="Northeast" y="14" x="0"></Source>
+        <Blocker y="9" x="7"></Blocker>
+        <Blocker y="9" x="8"></Blocker>
+        <Blocker y="9" x="9"></Blocker>
+        <Detector green="unwanted" red="required" blue="unwanted" y="10" x="7"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Detector green="required" red="required" blue="unwanted" y="1" x="1"></Detector>
+        <Prism direction="North" y="3" x="0"></Prism>
+        <Source color="red" direction="South" y="0" x="1"></Source>
+        <Source color="green" direction="North" y="2" x="1"></Source>
+        <Mirror direction="North" y="0" x="0"></Mirror>
+        <PartialMirror direction="South" y="1" x="0"></PartialMirror>
+        <PartialMirror direction="South" y="2" x="0"></PartialMirror>
+    </moveableGates>
+</houseofmirrors>

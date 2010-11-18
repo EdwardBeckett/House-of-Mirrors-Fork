@@ -1,0 +1,17 @@
+<houseofmirrors>
+    <description>Do or DIE ! (Solved)<br/>Designed by HRJ</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Mirror direction="s" y="3" x="4"></Mirror>
+        <PartialMirror direction="w" y="6" x="7"></PartialMirror>
+        <Detector y="7" x="6" red="required" green="required" blue="required"></Detector>
+        <Detector y="4" x="5" red="required" green="required" blue="required"></Detector>
+        <Detector y="11" x="12" red="required" green="required" blue="required"></Detector>
+        <Detector y="6" x="2" red="required" green="required" blue="required"></Detector>
+        <Detector y="6" x="10" red="required" green="required" blue="required"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Source direction="w" y="6" x="14" color="white"></Source>
+        <Source direction="ne" y="6" x="1" color="white"></Source>
+    </moveableGates>
+</houseofmirrors>

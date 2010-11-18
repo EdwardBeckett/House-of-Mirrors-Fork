@@ -1,0 +1,21 @@
+<houseofmirrors>
+    <description>Level 8.</description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Source color="red" direction="East" y="8" x="0"></Source>
+        <Source color="green" direction="West" y="6" x="14"></Source>
+        <Detector green="required" red="unwanted" blue="unwanted" y="11" x="4"></Detector>
+        <Detector green="required" red="unwanted" blue="unwanted" y="13" x="7"></Detector>
+        <Detector green="required" red="unwanted" blue="unwanted" y="11" x="10"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="1" x="7"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="3" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="3" x="10"></Detector>
+        <Detector green="required" red="required" blue="unwanted" y="7" x="7"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <PartialMirror direction="East" y="14" x="0"></PartialMirror>
+        <PartialMirror direction="East" y="14" x="2"></PartialMirror>
+        <PartialMirror direction="East" y="14" x="1"></PartialMirror>
+        <PartialMirror direction="East" y="14" x="3"></PartialMirror>
+    </moveableGates>
+</houseofmirrors>

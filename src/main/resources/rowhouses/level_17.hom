@@ -1,0 +1,12 @@
+<houseofmirrors>
+    <description>Level 17.<br/><br/>Introducing the Worm holes<br/><br/>Worm holes come as a pair. Light directed at one comes out from the other!</description>
+    <bounds width="10" height="10"></bounds>
+    <moveableGates>
+        <WormHole x2="5" y2="4" x1="3" y1="2"></WormHole>
+        <WormHole x2="3" y2="2" x1="5" y1="4"></WormHole>
+    </moveableGates>
+    <fixedGates>
+        <Detector green="unwanted" red="unwanted" blue="required" y="7" x="8"></Detector>
+        <Source color="blue" direction="East" y="2" x="0"></Source>
+    </fixedGates>
+</houseofmirrors>

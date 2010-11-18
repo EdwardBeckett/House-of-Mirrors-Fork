@@ -1,0 +1,26 @@
+<houseofmirrors>
+    <description>
+        Level 6. <br/><br/><div color="white" bgcolor="black"> Light rays of different colors can be combined to form other colors using, for example, the partial-mirror.<br/><br/>
+        <font color="red" bgcolor="black">&#x00A0;RED&#x00A0;</font> + <font color="blue" bgcolor="black">&#x00A0;BLUE&#x00A0;</font> = <font color="#FF00FF" bgcolor="black">&#x00A0;PURPLE&#x00A0;</font><br/><br/>
+        <font color="red" bgcolor="black">&#x00A0;RED&#x00A0;</font> + <font color="#00FF00" bgcolor="black">&#x00A0;GREEN&#x00A0;</font> = <font color="#FFFF00" bgcolor="black">&#x00A0;YELLOW&#x00A0;</font><br/><br/>
+        <font color="blue" bgcolor="black">&#x00A0;BLUE&#x00A0;</font> + <font color="#00FF00" bgcolor="black">&#x00A0;GREEN&#x00A0;</font> = <font color="#00FFFF" bgcolor="black">&#x00A0;TEAL&#x00A0;</font><br/><br/>
+        <font color="red" bgcolor="black">&#x00A0;RED&#x00A0;</font> + <font color="#00FF00" bgcolor="black">&#x00A0;GREEN&#x00A0;</font> + <font color="blue" bgcolor="black">&#x00A0;BLUE&#x00A0;</font> = <font color="white" bgcolor="black">&#x00A0;WHITE&#x00A0;</font><br/><br/><br/>
+        To solve this level, combine <font color="red" bgcolor="black">&#x00A0;RED&#x00A0;</font> and <font color="#00FF00" bgcolor="black">&#x00A0;GREEN&#x00A0;</font> to light up the <font color="yellow" bgcolor="black">&#x00A0;YELLOW&#x00A0;</font> detectors.<br/><br/>
+        Then, combine <font color="yellow" bgcolor="black">&#x00A0;YELLOW&#x00A0;</font> with <font color="blue" bgcolor="black">&#x00A0;BLUE&#x00A0;</font> to light up the <font color="white" bgcolor="black">&#x00A0;WHITE&#x00A0;</font> detector.</div>
+    </description>
+    <bounds width="15" height="15"></bounds>
+    <fixedGates>
+        <Source color="green" direction="East" y="7" x="0"></Source>
+        <Source color="red" direction="South" y="0" x="7"></Source>
+        <Source color="blue" direction="South" y="0" x="13"></Source>
+        <Detector green="required" red="required" blue="unwanted" y="10" x="7"></Detector>
+        <Detector green="required" red="required" blue="unwanted" y="7" x="10"></Detector>
+        <Detector green="required" red="unwanted" blue="unwanted" y="7" x="3"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="2" x="7"></Detector>
+        <Detector green="required" red="required" blue="required" y="10" x="13"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <PartialMirror direction="South" y="1" x="0"></PartialMirror>
+        <PartialMirror direction="South" y="0" x="0"></PartialMirror>
+    </moveableGates>
+</houseofmirrors>

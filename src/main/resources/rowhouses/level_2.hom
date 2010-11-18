@@ -1,0 +1,15 @@
+<houseofmirrors>
+    <description>Level 2.<br/><br/>Light up all the detectors simultaneously.</description>
+    <bounds width="10" height="10"></bounds>
+    <fixedGates>
+        <Source color="red" direction="Southeast" y="0" x="3"></Source>
+        <Detector green="unwanted" red="required" blue="unwanted" y="7" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="3" x="4"></Detector>
+        <Detector green="unwanted" red="required" blue="unwanted" y="5" x="4"></Detector>
+    </fixedGates>
+    <moveableGates>
+        <Mirror direction="North" y="1" x="9"></Mirror>
+        <Mirror direction="North" y="2" x="9"></Mirror>
+        <Mirror direction="North" y="0" x="9"></Mirror>
+    </moveableGates>
+</houseofmirrors>

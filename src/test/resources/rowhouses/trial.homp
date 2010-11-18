@@ -1,0 +1,63 @@
+<HoMPack>
+    <unlocked>
+        <ulevel id="5"></ulevel>
+        <ulevel id="6"></ulevel>
+        <ulevel id="7"></ulevel>
+        <ulevel id="8"></ulevel>
+        <ulevel id="9"></ulevel>
+        <ulevel id="10"></ulevel>
+        <ulevel id="11"></ulevel>
+        <ulevel id="12"></ulevel>
+        <ulevel id="13"></ulevel>
+        <ulevel id="14"></ulevel>
+        <ulevel id="15"></ulevel>
+        <ulevel id="16"></ulevel>
+        <ulevel id="17"></ulevel>
+        <ulevel id="18"></ulevel>
+        <ulevel id="19"></ulevel>
+    </unlocked>
+    <level id="5" file="level_5.hom">
+        <unlock id="6"></unlock>
+    </level>
+    <level id="6" file="level_6.hom">
+        <unlock id="7"></unlock>
+    </level>
+    <level id="7" file="level_7.hom">
+        <unlock id="8"></unlock>
+    </level>
+    <level id="8" file="level_8.hom">
+        <unlock id="9"></unlock>
+    </level>
+    <level id="9" file="level_9.hom">
+        <unlock id="10"></unlock>
+    </level>
+    <level id="10" file="level_10.hom">
+        <unlock id="11"></unlock>
+    </level>
+    <level id="11" file="level_11.hom">
+        <unlock id="12"></unlock>
+        <unlock id="13"></unlock>
+    </level>
+    <level id="12" file="level_12.hom">
+        <unlock id="14"></unlock>
+    </level>
+    <level id="13" file="level_13.hom">
+        <unlock id="14"></unlock>
+    </level>
+    <level id="14" file="level_14.hom">
+        <unlock id="15"></unlock>
+    </level>
+    <level id="15" file="level_15.hom">
+        <unlock id="16"></unlock>
+    </level>
+    <level id="16" file="level_16.hom">
+        <unlock id="17"></unlock>
+    </level>
+    <level id="17" file="level_17.hom">
+        <unlock id="18"></unlock>
+    </level>
+    <level id="18" file="level_18.hom">
+        <unlock id="19"></unlock>
+    </level>
+    <level id="19" file="level_19.hom"></level>
+</HoMPack>
