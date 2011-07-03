@@ -36,7 +36,7 @@ abstract class LightBoxMediator (c: Object) extends Mediator("ui-mediator", c) w
   listenTo(ui, ui.keys, ui.mouse.clicks)
 
   reactions += {
-    case KeyPressed(_, Key.Q, _, _) => exit()
+    case KeyPressed(_, Key.Q, _, _) => sys.exit()
     case KeyPressed(_, Key.Space, _, _) => rotateSelectedGate()
     case KeyPressed(_, Key.Enter, _, _) => rotateOtherwiseSelectedGate()
     case KeyPressed(_, Key.Up, _, _) => moveUp()

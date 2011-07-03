@@ -461,7 +461,7 @@ trait MainFrameComponent {
         contents += (new MenuItem(Action("Open...") { openFile() }))
         contents += (new MenuItem(Action("Save...") { saveFile() }))
         contents += (new MenuItem(Action("Save Game") { saveGame() }))
-        contents += (new MenuItem(Action("Quit") { exit() }))
+        contents += (new MenuItem(Action("Quit") { sys.exit() }))
       })
       contents += (new Menu("Game") {
         contents += (new MenuItem(Action("Reset") { resetLevel() }))

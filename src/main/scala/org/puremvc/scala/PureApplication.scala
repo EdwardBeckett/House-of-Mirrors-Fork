@@ -55,6 +55,6 @@ abstract class PureApplication {
 	}
 	
 	def shutdown() {
-		exit()
+		sys.exit()
 	}
 }
