@@ -1,17 +1,17 @@
 
-# Mouse of Horrors
+## Mouse of Horrors
 
 A fork of House of Mirrors, as an exercise in Scala development.
 
 Thanks to the author of [the original code](http://code.google.com/p/houseofmirrors/).
 
-## Notes
+### Notes
 
 Requires Scala 2.9 for trivial API (sys.exit).
 
 A build file for SBT is included.
 
-## Summary
+### Summary
 
 1. The refactored code uses the PureMVC framework in Java, the primary virtue of which is to ensure
 that UI events are converted to application events for processing.  "Evil" (Martin Odersky)
