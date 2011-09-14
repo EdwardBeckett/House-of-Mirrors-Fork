@@ -7,11 +7,27 @@ Thanks to the author of [the original code](http://code.google.com/p/houseofmirr
 
 ### Notes
 
-Requires Scala 2.9 for trivial API (sys.exit).
+A quick build file for SBT is included.
 
-A build file for SBT is included.
+    $ sbt run
 
 ### Summary
+
+#### Version 2.0
+
+1. Deguiced in favor of cake assembly (layers and slices).
+
+2. They deprecated the observer pattern and forgot to tell me.
+Removed PureMVC in favor of scala.actors and scala.react.
+
+3. Immutable data and use of lenses for updates.
+
+4. The UI retains both keyboard commands and mouse gestures.
+In particular, you can still advance a level by clicking on an empty spot in a completed level,
+and return to previously completed levels by right-clicking.  The game can be played using only
+the mouse; hence, Mouse of Horrors.
+
+#### Aversion 1.0
 
 1. The refactored code uses the PureMVC framework in Java, the primary virtue of which is to ensure
 that UI events are converted to application events for processing.  "Evil" (Martin Odersky)

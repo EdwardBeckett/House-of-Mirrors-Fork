@@ -30,7 +30,7 @@ object GamePack {
  * The game definition is a set of game level files
  * and the set of accessible or unlocked levels.
  */
-class GamePack(var unlockedLevels: Set[Int], private var packEntries: List[PackEntry]) {
+case class GamePack(var unlockedLevels: Set[Int], private val packEntries: List[PackEntry]) {
 
   private var packResource: Option[Resource] = None
   
@@ -123,5 +123,5 @@ object PackEntry {
   }
 }
 
-class PackEntry(val id: Int, val file: String, val unlock: List[Int])
+case class PackEntry(val id: Int, val file: String, val unlock: List[Int])
 

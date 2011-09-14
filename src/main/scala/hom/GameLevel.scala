@@ -219,3 +219,7 @@ class GameLevel(val level: Int, val description: String, val bounds: Bound, val 
 
 class GameState(val segments: List[Segment], val gates: List[Gate], val status: StatusUpdate)
 
+case class StatusUpdate(description: String, score: Int, total: Int) {
+  def isComplete: Boolean = score == total
+}
+

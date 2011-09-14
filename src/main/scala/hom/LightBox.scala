@@ -141,7 +141,8 @@ class LightBox extends Panel {
           if (this.currentSelection.isDefined && releasePoint == this.currentSelection.get.position) {
             // Clicking current selection rotates it
             //assert (this.currentSelection.get.isInstanceOf[Moveable])
-            publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
+            //publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
+            publish(ClickEvent(releasePoint, MouseButtons.forEvent(e)))
           } else {
             // Clicking another (moveable) gate selects it
             val g = optionalGateForPosition(releasePoint)
@@ -160,7 +161,8 @@ class LightBox extends Panel {
     } else if (this.isEmptyGesture) {
       this.isEmptyGesture = false
       if (this.dragStart == releasePoint) {
-        publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
+        //publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
+        publish(ClickEvent(releasePoint, MouseButtons.forEvent(e)))
       }
     }
   }
@@ -178,7 +180,9 @@ class LightBox extends Panel {
             case WHEEL_UNIT_SCROLL => (w.getWheelRotation, w.getScrollAmount)
             case WHEEL_BLOCK_SCROLL => (w.getWheelRotation, 1)
           }
-          val direction = if (rotation < 0) 0 else 1
+          //val direction = if (rotation < 0) 0 else 1
+          import MouseButtons._
+          val direction = if (rotation < 0) Left else Right
           val clicks = if (rotation < 0) -rotation else rotation
           for (i <- 0 until clicks) publish(ClickEvent(clickPoint, direction))
         case _ =>
@@ -390,15 +394,15 @@ class LightBox extends Panel {
 
   private def widgetForGate(gate: Gate): Renderable = {
     gate match {
-      case x: Mirror => new MirrorWidget(gate.asInstanceOf[Mirror])
-      case x: PartialMirror => new PartialMirrorWidget(gate.asInstanceOf[PartialMirror])
-      case x: CrossMirror => new CrossMirrorWidget(gate.asInstanceOf[CrossMirror])
-      case x: Detector => new DetectorWidget(gate.asInstanceOf[Detector])
-      case x: Source => new SourceWidget(gate.asInstanceOf[Source])
-      case x: Blocker => new BlockerWidget(gate.asInstanceOf[Blocker])
-      case x: Prism => new PrismWidget(gate.asInstanceOf[Prism])
-      case x: Conduit => new ConduitWidget(gate.asInstanceOf[Conduit])
-      case x: WormHole => new WormHoleWidget(gate.asInstanceOf[WormHole])
+      case x: Mirror => new MirrorWidget(x)
+      case x: PartialMirror => new PartialMirrorWidget(x)
+      case x: CrossMirror => new CrossMirrorWidget(x)
+      case x: Detector => new DetectorWidget(x)
+      case x: Source => new SourceWidget(x)
+      case x: Blocker => new BlockerWidget(x)
+      case x: Prism => new PrismWidget(x)
+      case x: Conduit => new ConduitWidget(x)
+      case x: WormHole => new WormHoleWidget(x)
     }
   }
 
@@ -710,7 +714,19 @@ class LightBox extends Panel {
 
 case class DragEvent(from: Point, to: Point) extends Event
 
-case class ClickEvent(where: Point, button: Int) extends Event
+case class ClickEvent(where: Point, button: MouseButtons.MouseButton) extends Event
+
+object MouseButtons extends Enumeration {
+  type MouseButton = Value
+  val Left, Right, Middle = Value
+  import java.awt.event.MouseEvent._
+  def forEvent(e: MouseButtonEvent): MouseButton = e.peer.getButton match {
+    case BUTTON1 => Left
+    case BUTTON2 => Middle
+    case BUTTON3 => Right
+    case x => Left //No good can come of this
+  }
+}
 
 import java.awt.{CompositeContext, RenderingHints}
 import java.awt.image.{ColorModel, ComponentColorModel, Raster, WritableRaster, IndexColorModel, PackedColorModel}

@@ -6,7 +6,7 @@ trait WithFileWriter {
   var charset: Charset = Charset.defaultCharset
   
   class Exceptions(primary: Throwable, secondary: Throwable*) extends Exception(primary) {
-	def all = secondary  
+    def all = secondary  
   }
 
   protected final def withWriter(f: File)(g: Writer => Unit) {
