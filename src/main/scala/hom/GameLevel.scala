@@ -51,15 +51,12 @@ object GameLevel {
 
     val fixedGates = parseGates(trimTop, "fixedGates")
     val moveableGates = parseMoveableGates(trimTop, "moveableGates")
-    println("fixed " + fixedGates.length)
-    println("moveable " + moveableGates.length)
 
     def repairHoles(fixedGates: List[Gate], moveableGates: List[Gate]): Tuple2[List[Gate], List[Gate]] = {
       import collection.mutable.{HashSet, ListBuffer}
       val allHoles = new HashSet[WormHole]
       allHoles ++= (fixedGates ::: moveableGates) filter (_.isInstanceOf[WormHole]) map (_.asInstanceOf[WormHole])
       if (!allHoles.isEmpty) {
-        println(allHoles.size +" holes")
         val allPairs = ListBuffer[Tuple2[WormHole, WormHole]]()
         val losers = new HashSet[WormHole]
         // find pairs
@@ -72,22 +69,18 @@ object GameLevel {
           losers += one
           losers += two
         }
-        println(allPairs.size +" pairs")
         // recreate paired wormholes
         val newHoles = allPairs flatMap { t => makeWormHoles(t._1, t._2) }
-        println(newHoles.size +" new holes")
         val (newMoveable, newFixed) = newHoles partition (_.isInstanceOf[Moveable])
-        println(newMoveable.size +" are moveable, fixed are "+ newFixed.size)
         // all holes are replaced, so the filter removes all holes
         val fixedUpdated = (fixedGates filter (g => !g.isInstanceOf[WormHole] || !losers.contains(g.asInstanceOf[WormHole]))) ++ newFixed
         val moveableUpdated = (moveableGates filter (g => !g.isInstanceOf[WormHole] || !losers.contains(g.asInstanceOf[WormHole]))) ++ newMoveable
         (fixedUpdated, moveableUpdated)
-        //(fixedGates filter (losers.contains(_)) ++ newFixed, moveableGates filter (losers.contains(_)) ++ newMoveable)
       } else {
-        println("No holes to repair")
         (fixedGates, moveableGates)
       }
     }
+    // the given wormholes are detached, so recreate them with twin links, and with twins that are correctly Fixed or Moveable.
     def makeWormHoles(a: WormHole, b: WormHole): Seq[WormHole] = {
       require(a.position == b.twin.position && a.twin.position == b.position)
       val anchor = if (a.isInstanceOf[FixedWormHole]) {
@@ -99,39 +92,6 @@ object GameLevel {
     }
     val (fixedGatesRepaired, moveableGatesRepaired) = repairHoles(fixedGates, moveableGates)
 
-    /*
-    // wormholes don't know their twins yet; for fun, handle the case of one is moveable but the other is fixed
-    for (one <- fixedGates if (one.isInstanceOf[WormHole] && one.asInstanceOf[WormHole].twin == null)) {
-      val cur = one.asInstanceOf[WormHole]
-      // look among other fixed gates (self-test should fail)
-      for (two <- fixedGates if (two.isInstanceOf[WormHole] && two.asInstanceOf[WormHole].position == cur.other)) {
-        val other = two.asInstanceOf[WormHole]
-        cur.twin = other
-        other.twin = cur
-      }
-      // look among moveable gates
-      if (cur.twin == null) {
-        for (two <- moveableGates if (two.isInstanceOf[WormHole] && two.asInstanceOf[WormHole].position == cur.other)) {
-          val other = two.asInstanceOf[WormHole]
-          cur.twin = other
-          other.twin = cur
-        }
-      }
-    }
-    // any remaining are pairs which are both moveable
-    for (one <- moveableGates if (one.isInstanceOf[WormHole] && one.asInstanceOf[WormHole].twin == null)) {
-      val cur = one.asInstanceOf[WormHole]
-      // look among other moveable gates (self-test should fail)
-      for (two <- moveableGates if (two.isInstanceOf[WormHole] && two.asInstanceOf[WormHole].position == cur.other)) {
-        val other = two.asInstanceOf[WormHole]
-        cur.twin = other
-        other.twin = cur
-      }
-    }
-    */
-
-    println("final fixed " + fixedGatesRepaired.length)
-    println("final moveable " + moveableGatesRepaired.length)
     val description = (trimTop \\ "description")(0).child.foldLeft("")(_ + _.toString)
     return new GameLevel(level, description, bounds, fixedGatesRepaired, moveableGatesRepaired)
   }

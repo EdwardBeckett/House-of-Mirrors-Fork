@@ -15,8 +15,8 @@ object Directions extends Enumeration {
 
   /** An element of Directions, with utility methods for simple transforms. */
   class Direction protected[Directions] (i: Int, s: String) extends Val(i, s) {
-    def right45 = lookup(if (this.id + 1 >= maxId) minId else this.id + 1)
-    def left45 = lookup(if (this.id - 1 < minId) maxId - 1 else this.id - 1)
+    def right45 = lookup(bump)
+    def left45 = lookup(decr)
     def right90 = right45.right45
     def left90 = left45.left45
     def right135 = right45.right90
@@ -40,6 +40,7 @@ object Directions extends Enumeration {
     private def mod(x: Int, n: Int) = if (x >= 0) x % n else (x + n)
     private def bump: Int = bump(this.id)
     private def bump(v: Int): Int = if (v + 1 >= maxId) minId else v + 1
+    private def decr: Int = if (this.id - 1 < minId) maxId - 1 else this.id - 1
     private def bump(v: Int, n: Int): Int = {
       require(n >= 0)
       var i = n

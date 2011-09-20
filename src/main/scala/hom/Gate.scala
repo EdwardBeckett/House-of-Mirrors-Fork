@@ -32,7 +32,7 @@ trait Oriented {
   val direction: Direction
 }
 
-/** Marker mixin for gates that can be rotated in increments of 45 degrees. */
+/** Mixin for gates that can be rotated in increments of 45 degrees. */
 trait Turnable {
   this: Oriented =>
   def turnCW = reorient(direction.right45)
@@ -40,7 +40,7 @@ trait Turnable {
   protected def reorient(d: Direction): Gate
 }
 
-/** Marker mixin for gates that can be moved. */
+/** Mixin for gates that can be moved. */
 trait Moveable {
   this: Gate =>
   //def moveUp = moveTo(position.moveUp)
@@ -78,14 +78,11 @@ abstract class WormHole extends Gate { primary =>
   */
   /** After a move, if we are detached from our twin, return our twin's twin to replace us. */
   override def validate(gates: Seq[Gate]): Gate = {
-    println("Validate "+ this)
     val found = gates find (g => g.isInstanceOf[WormHole] && g.asInstanceOf[WormHole].twin.position == position)
     if (found.isDefined) {
-      println("Found companion wormhole at " + found.get)
       val candidate = found.get.asInstanceOf[WormHole]
       candidate.twin // either this or new twin created when other end was moved
     } else {
-      println("Validating "+ this)
       this  // this end was moved and other end is detached
     }
   }

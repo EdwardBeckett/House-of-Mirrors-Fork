@@ -56,8 +56,6 @@ trait ViewComponents {
     }
 
     private def onTrace(state: GameState) {
-      println("On trace")
-      try {
       ui.setGridBounds(model.level.bounds)
       ui.setTrace(state.segments, state.gates)
       ui.completed = state.status.score == state.status.total
@@ -69,10 +67,6 @@ trait ViewComponents {
         this.ui.select(state.gates.find(x => x.isInstanceOf[Moveable]))
       }
       ui.repaint()
-      } catch {
-        case e: Exception => e.printStackTrace
-      }
-      println("On trace done")
     }
 
     /**

@@ -195,7 +195,6 @@ class LightBox extends Panel {
 
   /** The gate at the given position. Blows up if no such gate. */
   private def gateForPosition(where: Point): Gate = {
-    //this.gates.find(g => g.position == where).get
     optionalGateForPosition(where).get
   }
 
@@ -223,8 +222,9 @@ class LightBox extends Panel {
         case _ => false
       }
     }
-    val result: Option[Gate] = this.gates.find(isNextMoveable)
-    if (!result.isDefined) first else result
+    //val result: Option[Gate] = this.gates.find(isNextMoveable)
+    //if (!result.isDefined) first else result
+    this.gates.find(isNextMoveable) orElse first
   }
 
   /** The previous moveable gate before the given gate, defaults to the last moveable gate. */
@@ -303,29 +303,6 @@ class LightBox extends Panel {
     g.fillRect(0,0, this.boxside, this.boxside)
 
     g.setClip(0,0,this.gridBounds.width * hscale - 1,this.gridBounds.height * vscale - 1)
-
-
-    // Draw the Grid
-    //Grid.render(g)
-
-    // Draw those saber rays
-    /*
-    val oldComposite = g.getComposite
-    g.setComposite(AddComposite)
-    g.setStroke(thinStroke)
-    this.segments.foreach (line => {
-      g.setColor(line.color.color)
-      g.drawLine (hscale/2 + line.start.x * hscale,
-                  vscale/2 + line.start.y * vscale,
-                  hscale/2 + line.end.x * hscale,
-                  // Math.min(hscale/2 + line.end.x * hscale, d.width - (d.width % hscale)),
-                  vscale/2 + line.end.y * vscale)
-    })
-    g.setComposite(oldComposite)
-    */
-
-    // Draw the gates. Notice that we draw them on-top-of the saber rays
-    //g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     for (r <- this.renderables) r.render(g)
 

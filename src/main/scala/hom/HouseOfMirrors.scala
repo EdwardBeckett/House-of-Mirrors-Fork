@@ -158,8 +158,7 @@ trait ControllerComponents {
       emitter.raise(TraceResult(state))
       if (state.status.isComplete) {
         val u = model.pack.unlockAll(model.level.level);
-        u foreach { p: GamePack => model = model.copy(pack = p); println("New levels unlocked.") }
-        //if (model.pack.unlockAll(model.level.level)) { println("New levels unlocked.") }
+        u foreach { p: GamePack => model = model.copy(pack = p) }
         if (!model.history.hasGameLevel(model.level)) {
           model.history.putGameLevel(model.level)
         }
@@ -359,7 +358,6 @@ case class TraceResult(state: GameState) extends HouseMessage
 case object PreviousLevel extends HouseMessage
 case object NextLevel extends HouseMessage
 case object ResetLevel extends HouseMessage
-case class ProgressTo(level: Int) extends HouseMessage
 case class LevelUpdate(level: GameLevel) extends HouseMessage
 
 /**
