@@ -3,106 +3,151 @@ package hom
 import Directions._
 import LineColors._
 
-/** An Oriented Gate has a mutable direction. */
+/** A gate is the base trait for all objects in the light box.  */
+sealed trait Gate {
+  /** The position of this gate. */
+  val position: Point
+
+  /** Does this gate contain the point? */
+  def contains(p: Point): Boolean = (position == p)
+
+  /** Validate this gate, in the given context. */
+  def validate(gates: Seq[Gate]): Gate = this
+
+  /**
+   * Gates act upon incident rays, and in turn may be acted upon by them.
+   * For the given incident ray, generate the outgoing rays and a possibly altered gate.
+   */
+  def act(in: Ray): (List[Ray], Gate)
+}
+
+/** A gate that blocks rays and is non-reactive to light. */
+trait Opaque {
+  this: Gate =>
+  override def act(in: Ray): (List[Ray], Gate) = (Nil, this)
+}
+
+/** An Oriented Gate has a direction. */
 trait Oriented {
-  var direction: Direction
+  val direction: Direction
 }
 
-/** A Turnable Gate can be turned clockwise or counter-clockwise in 45 degree increments, mutating the gate direction. */
+/** Marker mixin for gates that can be rotated in increments of 45 degrees. */
 trait Turnable {
-  this: Gate with Oriented =>
-  def turnCW = { this.direction = this.direction.right45; this }
-  def turnCCW = { this.direction = this.direction.left45; this }
+  this: Oriented =>
+  def turnCW = reorient(direction.right45)
+  def turnCCW = reorient(direction.left45)
+  protected def reorient(d: Direction): Gate
 }
 
-/**
- * Mutates the position of this gate.
- */
+/** Marker mixin for gates that can be moved. */
 trait Moveable {
   this: Gate =>
-  def moveUp = { this.position = position.moveUp; this }
-  def moveDown = { this.position = position.moveDown; this }
-  def moveLeft = { this.position = position.moveLeft; this }
-  def moveRight = { this.position = position.moveRight; this }
-  def moveTo(dst: Point) = { this.position = dst; this }
+  //def moveUp = moveTo(position.moveUp)
+  //def moveDown = moveTo(position.moveDown)
+  //def moveLeft = moveTo(position.moveLeft)
+  //def moveRight = moveTo(position.moveRight)
+  def moveTo(dst: Point, src: Point = position) = repositionTo(dst, src)
+  protected def repositionTo(dst: Point, src: Point): Gate = reposition(dst)
+  protected def reposition(dst: Point): Gate
 }
 
-/**
- * A gate that refuses to be moved.
- */
+/** Formerly used to subvert assignment to position. */
 trait Fixed {
   this: Gate =>
-  override def position_=(p: Point): Nothing = throw new UnsupportedOperationException
 }
 
-/**
- * A gate is the base class for all objects in the light box.
- * Gates act upon incident rays, and in turn may be acted upon by them.
- * A gate has a mutable position.
- */
-sealed abstract class Gate(p: Point) {
-  private var where = p
-  def position: Point = this.where
-  def position_=(other: Point) { this.where = other }
-  /**
-   * For the given incoming ray, generate the outgoing rays
-   * and a possibly altered gate.
-   */
-  def act(inRay: Ray) : (List[Ray], Gate) = (Nil, this)
+trait Colored {
+  val color: LineColor
 }
 
-/**
- * Incident rays emerge at the twin wormhole with the same direction and color.
- */
-class WormHole(p: Point, val other: Point) extends Gate(p) {
-  var twin: WormHole = _
-  override def act(inRay: Ray) = (Ray(twin.position, inRay.direction, inRay.color) :: Nil, this)
-}
-class FixedWormHole(p: Point, p2: Point) extends WormHole(p, p2) with Fixed
-class MoveableWormHole(p: Point, p2: Point) extends WormHole(p, p2) with Moveable
-
-/**
- * Blocks all rays.
- */
-class Blocker(p: Point) extends Gate(p) {
-  override def act(inRay: Ray): (List[Ray], Gate) = (Nil, this)
-}
-class MoveableBlocker(p: Point) extends Blocker(p) with Moveable
-
-/**
- * Transmits only rays parallel to this orientation; blocks all others.
- */
-class Conduit(p: Point, var direction: Direction) extends Gate(p) with Oriented {
-  override def act(inRay: Ray) = {
-    if (inRay.direction == direction || inRay.direction == direction.reverse)
-      (Ray(position, inRay.direction, inRay.color) :: Nil, this)
-    else (Nil, this)
+/** Incident rays emerge at the twin wormhole with the same direction and color.  */
+abstract class WormHole extends Gate { primary =>
+  lazy val twin: WormHole = makeTwin
+  private def makeTwin: WormHole = if (otherIsFixed) {
+      new FixedWormHole(other, position, this.isInstanceOf[Fixed]) {
+        override lazy val twin = primary
+      }
+    } else {
+      new MoveableWormHole(other, position, this.isInstanceOf[Fixed]) {
+        override lazy val twin = primary
+      }
+    }
+  /** A wormhole contains both endpoints.
+  override def contains(p: Point): Boolean = super.contains(p) || (other == p)
+  */
+  /** After a move, if we are detached from our twin, return our twin's twin to replace us. */
+  override def validate(gates: Seq[Gate]): Gate = {
+    println("Validate "+ this)
+    val found = gates find (g => g.isInstanceOf[WormHole] && g.asInstanceOf[WormHole].twin.position == position)
+    if (found.isDefined) {
+      println("Found companion wormhole at " + found.get)
+      val candidate = found.get.asInstanceOf[WormHole]
+      candidate.twin // either this or new twin created when other end was moved
+    } else {
+      println("Validating "+ this)
+      this  // this end was moved and other end is detached
+    }
   }
+  val other: Point
+  val otherIsFixed: Boolean
+  override def act(in: Ray) = (Ray(twin.position, in.direction, in.color) :: Nil, this)
 }
-class MoveableConduit(p: Point, d: Direction) extends Conduit(p, d) with Moveable with Turnable
+/** If `otherIsFixed` is not specified, a fixed twin will be created. */
+case class FixedWormHole(position: Point, other: Point, otherIsFixed: Boolean = true) extends WormHole with Fixed
+/** If `otherIsFixed` is not specified, a moveable twin will be created. */
+case class MoveableWormHole(position: Point, other: Point, otherIsFixed: Boolean = false) extends WormHole with Moveable {
+  override def reposition(p: Point): WormHole = copy(position = p)
+}
 
-/**
- * Blocks incoming rays, but produces rays in the direction it is pointed.
- */
-class Source(p: Point, var direction: Direction, var color: LineColor) extends Gate(p) with Oriented {
-  override def act(inRay : Ray) = (Nil, this)
-  /** A list of rays emitted by this source. */
-  def emit(): List[Ray] = Ray(this.position,this.direction,this.color) :: Nil
+/** Blocks all rays. */
+abstract class Blocker extends Gate with Opaque
+case class FixedBlocker(position: Point) extends Blocker
+case class MoveableBlocker(position: Point) extends Blocker with Moveable {
+  override protected def reposition(to: Point): MoveableBlocker = copy(position = to)
 }
-class MoveableSource(p: Point, d: Direction, c: LineColor) extends Source(p,d,c) with Moveable with Turnable
+
+/** Transmits only rays parallel to this orientation; blocks all others.  */
+abstract class Conduit extends Gate with Oriented with Opaque {
+  override def act(in: Ray) = if (in.direction ?|| direction) (Ray(position, in.direction, in.color) :: Nil, this) else super.act(in)
+}
+case class FixedConduit(position: Point, direction: Direction) extends Conduit with Fixed
+case class MoveableConduit(position: Point, direction: Direction) extends Conduit with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveableConduit = copy(position = p)
+  override protected def reorient(d: Direction): MoveableConduit = copy(direction = d)
+}
+
+/** Blocks incoming rays, but produces rays in the direction it is pointed. */
+abstract class Source extends Gate with Oriented with Colored with Opaque {
+  /** A list of rays emitted by this source. */
+  def emit(): List[Ray] = Ray(position, direction, color) :: Nil
+}
+case class FixedSource(position: Point, direction: Direction, color: LineColor) extends Source
+case class MoveableSource(position: Point, direction: Direction, color: LineColor) extends Source with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveableSource = copy(position = p)
+  override protected def reorient(d: Direction): MoveableSource = copy(direction = d)
+}
 
 /**
  * All detectors must be lit up to complete a level.
  * Detectors transmit all rays but respond only to certain colors.
  * A detector is on when its absorption of colors equals its target wavelength.
  */
-class Detector(p: Point, val wavelength: LineColor, val absorption: LineColor = Black) extends Gate(p) {
-  def isOn: Boolean = this.wavelength == this.absorption
-  override def act(inRay: Ray) =
-    (Ray(this.position, inRay.direction, inRay.color) :: Nil, new Detector(this.position, wavelength, absorption + inRay.color))
+abstract class Detector extends Gate {
+  val wavelength: LineColor
+  val absorption: LineColor
+  def isOn: Boolean = wavelength == absorption
   override def toString = "B(" + position + ":" + isOn + ")"
+  override def act(in: Ray) = (Ray(position, in.direction, in.color) :: Nil, absorb(in.color))
+  protected def absorb(color: LineColor): Detector
 }
-class MoveableDetector(p: Point, w: LineColor) extends Detector(p,w) with Moveable
+case class FixedDetector(position: Point, wavelength: LineColor, absorption: LineColor = Black) extends Detector {
+  override protected def absorb(color: LineColor) = copy(absorption = absorption + color)
+}
+case class MoveableDetector(position: Point, wavelength: LineColor, absorption: LineColor = Black) extends Detector with Moveable {
+  override def reposition(p: Point): MoveableDetector = copy(position = p)
+  override protected def absorb(color: LineColor) = copy(absorption = absorption + color)
+}
 
 /**
  * A prism splits (redirects the components of) incoming light.
@@ -111,7 +156,7 @@ class MoveableDetector(p: Point, w: LineColor) extends Detector(p,w) with Moveab
  * blue is deflected 90 degrees (incident at right angles)
  * or split to both right angles (incident on the axis of the prism).
  */
-class Prism(p: Point, var direction: Direction) extends Gate(p) with Oriented {
+abstract class Prism extends Gate with Oriented {
   private def splitRedRay(inRay: Ray) = inRay.direction angle direction.reverse match {
     case 90 => Ray(position, inRay.direction, Red) :: Nil 
     case 270 => Ray(position, inRay.direction, Red) :: Nil 
@@ -145,13 +190,15 @@ class Prism(p: Point, var direction: Direction) extends Gate(p) with Oriented {
 
   override def toString = "Prism(" + position + ":" + direction + ")"
 }
-class MoveablePrism(p: Point, d: Direction) extends Prism(p,d) with Moveable with Turnable
+case class FixedPrism(position: Point, direction: Direction) extends Prism
+case class MoveablePrism(position: Point, direction: Direction) extends Prism with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveablePrism = copy(position = p)
+  override protected def reorient(d: Direction): MoveablePrism = copy(direction = d)
+}
 
-/**
- * SilveredSurfaces have orientation and reflect rays.
- */
-abstract class SilveredSurface(p: Point, var direction: Direction) extends Gate(p) with Oriented {
-  override final def act(inRay: Ray) = (reflectRay(inRay), this)
+/** SilveredSurfaces have orientation and reflect rays.  */
+abstract class SilveredSurface extends Gate with Oriented {
+  override final def act(in: Ray) = (reflectRay(in), this)
   protected def reflectRay(inRay: Ray): List[Ray]
 }
 
@@ -159,22 +206,26 @@ abstract class SilveredSurface(p: Point, var direction: Direction) extends Gate(
  * A mirror reflects rays back or at right angles.
  * It has a mirrored surface and a blocking surface, so that it only reflects in the direction it is facing.
  */
-class Mirror(p: Point, d: Direction) extends SilveredSurface(p,d) {
-  override protected def reflectRay(inRay : Ray) = inRay.direction angle direction.reverse match {
-    case 0 => Ray(position, inRay.direction.reverse, inRay.color) :: Nil
-    case 45 => Ray(position, inRay.direction.right90, inRay.color) :: Nil 
-    case 315 => Ray(position, inRay.direction.left90, inRay.color) :: Nil 
+abstract class Mirror extends SilveredSurface {
+  override protected def reflectRay(in: Ray) = in.direction angle direction.reverse match {
+    case 0 => Ray(position, in.direction.reverse, in.color) :: Nil
+    case 45 => Ray(position, in.direction.right90, in.color) :: Nil 
+    case 315 => Ray(position, in.direction.left90, in.color) :: Nil 
     case _ => Nil 
   }
 
   override def toString = "M(" + position + ":" + direction + ")"
 }
-class MoveableMirror(p: Point, d: Direction) extends Mirror(p,d) with Moveable with Turnable
+case class FixedMirror(position: Point, direction: Direction) extends Mirror with Fixed
+case class MoveableMirror(position: Point, direction: Direction) extends Mirror with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveableMirror = copy(position = p)
+  override protected def reorient(d: Direction): MoveableMirror = copy(direction = d)
+}
 
 /**
  * A partial mirror both reflects and transmits light incident on either surface.
  */
-class PartialMirror(p: Point, d: Direction) extends SilveredSurface(p,d) {
+abstract class PartialMirror extends SilveredSurface {
   override protected def reflectRay(inRay : Ray) = inRay.direction angle direction.reverse match {
     case 0 => Ray(position, inRay.direction.reverse, inRay.color) :: Ray(position, inRay.direction, inRay.color) :: Nil
     case 180 => Ray(position, inRay.direction.reverse, inRay.color) :: Ray(position, inRay.direction, inRay.color) :: Nil
@@ -187,9 +238,13 @@ class PartialMirror(p: Point, d: Direction) extends SilveredSurface(p,d) {
 
   override def toString = "PM(" + position + ":" + direction + ")"
 }
-class MoveablePartialMirror(p: Point, d: Direction) extends PartialMirror(p,d) with Moveable with Turnable
+case class FixedPartialMirror(position: Point, direction: Direction) extends PartialMirror with Fixed
+case class MoveablePartialMirror(position: Point, direction: Direction) extends PartialMirror with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveablePartialMirror = copy(position = p)
+  override protected def reorient(d: Direction): MoveablePartialMirror = copy(direction = d)
+}
 
-class CrossMirror(p: Point, d: Direction) extends SilveredSurface(p,d) {
+abstract class CrossMirror extends SilveredSurface {
   override def reflectRay(inRay : Ray) = inRay.direction angle direction.reverse match {
     case 315 => Ray(position, inRay.direction.left135, inRay.color) :: Nil
     case 270 => Ray(position, inRay.direction.left45, inRay.color) :: Nil 
@@ -200,5 +255,9 @@ class CrossMirror(p: Point, d: Direction) extends SilveredSurface(p,d) {
 
   override def toString = "M(" + position + ":" + direction + ")"
 }
-class MoveableCrossMirror(p: Point, d: Direction) extends CrossMirror(p,d) with Moveable with Turnable
+case class FixedCrossMirror(position: Point, direction: Direction) extends CrossMirror with Fixed
+case class MoveableCrossMirror(position: Point, direction: Direction) extends CrossMirror with Moveable with Turnable {
+  override protected def reposition(p: Point): MoveableCrossMirror = copy(position = p)
+  override protected def reorient(d: Direction): MoveableCrossMirror = copy(direction = d)
+}
 

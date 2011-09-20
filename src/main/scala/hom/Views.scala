@@ -8,26 +8,20 @@ import react.Observing
 
 trait ViewComponents {
   this: ControllerComponents with ModelComponents =>
-  val lightBox: LightBox
-  val statusBar: Label
-  val statusIcon: Label
-  val frame: Frame
+
+  val lightBoxMediator: LightBoxMediator
+  val statusBarMediator: StatusBarMediator
+  val statusIconMediator: StatusIconMediator
+  val applicationMediator: ApplicationMediator
 
   /**
    * Handles update notifications from the application
    * and user input from the LightBox.
    */
-  class LightBoxMediator(private val ui: LightBox) extends Reactor with Observing {
+  class LightBoxMediator(val ui: LightBox) extends Reactor with Observing {
 
     /** Attempt to track our selection across updates: the point is where the gate should end up. */
     private var selectionContinuity: (Option[Gate], Option[Point]) = (None, None)
-
-    val helpText = "<html><h1>Keyboard shortcuts</h1><br/><br/><dl>" + 
-      "<dt>n (p)</dt><dd>Select next (previous) gate<br/><br/></dd>" +
-      "<dt>SPACE (ENTER)</dt><dd>Rotate the selected element Counter-clockwise (Clockwise)<br/><br/></dd>" +
-      "<dt>UP,DOWN,LEFT,RIGHT</dt><dd>Move the selected element<br/><br/></dd>" +
-      "<dt>PAGE_UP (PAGE_DOWN)</dt><dd>Go to next (previous) level<br/><br/></dd>" +
-      "</dl></html>"
 
     listenTo(ui, ui.keys, ui.mouse.clicks)
 
@@ -49,7 +43,6 @@ trait ViewComponents {
     observe(controller.modelEvents) { e => e match {
         case LevelLoaded(v) => onLevelLoaded(v)
         case TraceResult(s) => onTrace(s)
-        case Help => Dialog.showMessage(ui, helpText)
         case unknown => println("Lightbox mediator ignored: "+ unknown)
       }
       true
@@ -59,10 +52,12 @@ trait ViewComponents {
      * When a level is loaded, select the first moveable gate.
      */
     private def onLevelLoaded(g: GameLevel) {
-      this.ui.currentSelection = if (g.moveable_gates.length > 0) Some(g.moveable_gates(0)) else None
+      this.ui.currentSelection = if (g.moveableGates.length > 0) Some(g.moveableGates(0)) else None
     }
 
     private def onTrace(state: GameState) {
+      println("On trace")
+      try {
       ui.setGridBounds(model.level.bounds)
       ui.setTrace(state.segments, state.gates)
       ui.completed = state.status.score == state.status.total
@@ -74,6 +69,10 @@ trait ViewComponents {
         this.ui.select(state.gates.find(x => x.isInstanceOf[Moveable]))
       }
       ui.repaint()
+      } catch {
+        case e: Exception => e.printStackTrace
+      }
+      println("On trace done")
     }
 
     /**
@@ -89,9 +88,9 @@ trait ViewComponents {
     private def rotateSelectedGate() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.turnCCW(p)) {
+        model.level.turnCCW(p) foreach {
           continuity(this.ui.currentSelection, p);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
@@ -99,45 +98,45 @@ trait ViewComponents {
     private def rotateOtherwiseSelectedGate() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.turnCW(p)) {
+        model.level.turnCW(p) foreach {
           continuity(this.ui.currentSelection, p);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
     private def moveUp() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.moveUp(p)) {
+        model.level.moveUp(p) foreach {
           continuity(this.ui.currentSelection, p.moveUp);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
     private def moveDown() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.moveDown(p)) {
+        model.level.moveDown(p) foreach {
           continuity(this.ui.currentSelection, p.moveDown);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
     private def moveLeft() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.moveLeft(p)) {
+        model.level.moveLeft(p) foreach {
           continuity(this.ui.currentSelection, p.moveLeft);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
     private def moveRight() {
       if (this.ui.currentSelection.isDefined) {
         val p: Point = this.ui.currentSelection.get.position
-        if (model.level.moveRight(p)) {
+        model.level.moveRight(p) foreach {
           continuity(this.ui.currentSelection, p.moveRight);
-          controller ! LevelUpdate
+          controller ! LevelUpdate(_)
         }
       }
     }
@@ -156,9 +155,9 @@ trait ViewComponents {
     }
 
     private def handleDrag(from: Point, to: Point) {
-      if (model.level.moveTo(from, to)) {
+      model.level.moveTo(from, to) foreach {
         continuity(this.ui.currentSelection, to)
-        controller ! LevelUpdate
+        controller ! LevelUpdate(_)
       }
     }
 
@@ -169,28 +168,36 @@ trait ViewComponents {
     private def handleClick(where: Point, button: MouseButton) {
       if (button == Left) {
         if (this.ui.occupied(where)) {
-          //todo don't mutate
-          if (model.level.turnCCW(where)) {
+          model.level.turnCCW(where) foreach {
             continuity(this.ui.currentSelection, where);
-            controller ! LevelUpdate
+            controller ! LevelUpdate(_)
           }
         } else {
           nextLevel()
         }
       } else if (button == Right) {
         if (this.ui.occupied(where)) {
-          if (model.level.turnCW(where)) {
+          model.level.turnCW(where) foreach {
             continuity(this.ui.currentSelection, where);
-            controller ! LevelUpdate
+            controller ! LevelUpdate(_)
           }
         } else {
           previousLevel()
         }
       }
     }
+
+    val helpText = "<html><h1>Keyboard shortcuts</h1><br/><br/><dl>" + 
+      "<dt>n (p)</dt><dd>Select next (previous) gate<br/><br/></dd>" +
+      "<dt>SPACE (ENTER)</dt><dd>Rotate the selected element Counter-clockwise (Clockwise)<br/><br/></dd>" +
+      "<dt>UP,DOWN,LEFT,RIGHT</dt><dd>Move the selected element<br/><br/></dd>" +
+      "<dt>PAGE_UP (PAGE_DOWN)</dt><dd>Go to next (previous) level<br/><br/></dd>" +
+      "</dl></html>"
+
+    def help = Dialog.showMessage(ui, helpText)
   }
 
-  class StatusBarMediator(statusBar: Label) extends Observing {
+  class StatusBarMediator(val statusBar: Label) extends Observing {
 
     observe(controller.modelEvents) { e => e match {
         case TraceResult(s) => onStatusUpdate(s.status)
@@ -213,13 +220,16 @@ trait ViewComponents {
     }
   }
 
-  class StatusIconMediator(statusIcon: Label) extends Observing {
+  class StatusIconMediator(val statusIcon: Label) extends Observing {
     observe(controller.modelEvents) { e => e match {
         case TraceResult(s) => statusIcon.enabled = s.status.isComplete
         case unknown => println("StatusIcon mediator ignored: "+ unknown)
       }
       true
     }
+  }
+
+  class ApplicationMediator(val frame: Frame) {
   }
 }
 

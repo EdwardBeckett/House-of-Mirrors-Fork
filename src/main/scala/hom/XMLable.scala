@@ -39,6 +39,7 @@ object XMLable {
     case "unwanted" => false
   }
 
+  // xml for individual gate does not encode moveable
   implicit def anyGate2XMLable(g: Gate): XMLable = g match {
     case x: WormHole => wormhole2XMLable(x)
     case x: Blocker => blocker2XMLable(x)
@@ -64,22 +65,23 @@ object XMLable {
   implicit def blocker2XMLable(g: Blocker): XMLable = new XMLable {
     override def toXML = <Blocker x={g.position.x.toString} y={g.position.y.toString} />
   }
-  implicit def node2BlockerFactory(n: Node): UnXMLable[Blocker] = new UnXMLable[Blocker] {
-    def fromXML: Blocker = new Blocker(Point(getNum(n,"x"), getNum(n,"y")))
+  implicit def node2BlockerFactory(n: Node): UnXMLable[FixedBlocker] = new UnXMLable[FixedBlocker] {
+    def fromXML: FixedBlocker = new FixedBlocker(Point(getNum(n,"x"), getNum(n,"y")))
   }
   implicit def node2MoveableBlockerFactory(n: Node): UnXMLable[MoveableBlocker] = new UnXMLable[MoveableBlocker] {
     def fromXML: MoveableBlocker = new MoveableBlocker(Point(getNum(n,"x"), getNum(n,"y")))
   }
 
   implicit def conduit2XMLable(g: Conduit): XMLable = new OrientedGateXMLable(g)
-  implicit def node2ConduitFactory(n: Node): UnXMLable[Conduit] = new OrientedGateUnXMLable[Conduit](n)
+  implicit def node2ConduitFactory(n: Node): UnXMLable[FixedConduit] = new OrientedGateUnXMLable[FixedConduit](n)
   implicit def node2MoveableConduitFactory(n: Node): UnXMLable[MoveableConduit] = new OrientedMoveableGateUnXMLable[MoveableConduit](n)
 
+  // Source
   implicit def source2XMLable(g: Source): XMLable = new XMLable {
     override def toXML = <Source x={g.position.x.toString} y={g.position.y.toString} direction={g.direction.toString} color={g.color.toString} />
   }
-  implicit def node2Source(n: Node): UnXMLable[Source] = new UnXMLable[Source] {
-    def fromXML: Source = new Source(getPosition(n), getDirection(n), getColor(n))
+  implicit def node2Source(n: Node): UnXMLable[FixedSource] = new UnXMLable[FixedSource] {
+    def fromXML: FixedSource = new FixedSource(getPosition(n), getDirection(n), getColor(n))
   }
   implicit def node2MoveableSource(n: Node): UnXMLable[MoveableSource] = new UnXMLable[MoveableSource] {
     def fromXML: MoveableSource = new MoveableSource(getPosition(n), getDirection(n), getColor(n))
@@ -91,39 +93,40 @@ object XMLable {
     // color is either required or unwanted
     private def need(b: Boolean) = if (b) "required" else "unwanted"
   }
-  implicit def node2Detector(node: Node): UnXMLable[Detector] = new UnXMLable[Detector] {
-    def fromXML: Detector = new Detector(getPosition(node), getDetectorWavelength(node))
+  implicit def node2Detector(node: Node): UnXMLable[FixedDetector] = new UnXMLable[FixedDetector] {
+    def fromXML: FixedDetector = new FixedDetector(getPosition(node), getDetectorWavelength(node))
   }
   implicit def node2MoveableDetector(node: Node): UnXMLable[MoveableDetector] = new UnXMLable[MoveableDetector] {
     def fromXML: MoveableDetector = new MoveableDetector(getPosition(node), getDetectorWavelength(node))
   }
 
   implicit def prism2XMLable(g: Prism): XMLable = new OrientedGateXMLable(g)
-  implicit def node2PrismFactory(n: Node): UnXMLable[Prism] = new OrientedGateUnXMLable[Prism](n)
+  implicit def node2PrismFactory(n: Node): UnXMLable[FixedPrism] = new OrientedGateUnXMLable[FixedPrism](n)
   implicit def node2MoveablePrismFactory(n: Node): UnXMLable[MoveablePrism] = new OrientedMoveableGateUnXMLable[MoveablePrism](n)
 
   // any subclass of SilveredSurface, i.e. mirrors
   implicit def mirror2XMLable(g: SilveredSurface): XMLable = new OrientedGateXMLable(g)
-  implicit def node2MirrorFactory(n: Node): UnXMLable[Mirror] = new OrientedGateUnXMLable[Mirror](n)
+  implicit def node2MirrorFactory(n: Node): UnXMLable[FixedMirror] = new OrientedGateUnXMLable[FixedMirror](n)
   implicit def node2MoveableMirrorFactory(n: Node): UnXMLable[MoveableMirror] = new OrientedMoveableGateUnXMLable[MoveableMirror](n)
-  implicit def node2PartialMirrorFactory(n: Node): UnXMLable[PartialMirror] = new OrientedGateUnXMLable[PartialMirror](n)
+  implicit def node2PartialMirrorFactory(n: Node): UnXMLable[FixedPartialMirror] = new OrientedGateUnXMLable[FixedPartialMirror](n)
   implicit def node2MoveablePartialMirrorFactory(n: Node): UnXMLable[MoveablePartialMirror] = new OrientedMoveableGateUnXMLable[MoveablePartialMirror](n)
-  implicit def node2CrossMirrorFactory(n: Node): UnXMLable[CrossMirror] = new OrientedGateUnXMLable[CrossMirror](n)
+  implicit def node2CrossMirrorFactory(n: Node): UnXMLable[FixedCrossMirror] = new OrientedGateUnXMLable[FixedCrossMirror](n)
   implicit def node2MoveableCrossMirrorFactory(n: Node): UnXMLable[MoveableCrossMirror] = new OrientedMoveableGateUnXMLable[MoveableCrossMirror](n)
 
   private class OrientedGateUnXMLable[A <: Gate with Oriented](n: Node) extends UnXMLable[A] {
     override def fromXML: A = node2OrientedGate(n)
   }
 
+  // Fixed gates
   private def node2OrientedGate[A <: Gate with Oriented](n: Node): A = {
     val p = getPosition(n)
     val d = getDirection(n)
     val g: Gate = n.label match {
-      case "Conduit" => new Conduit(p, d)
-      case "Prism" => new Prism(p, d)
-      case "Mirror" => new Mirror(p, d)
-      case "PartialMirror" => new PartialMirror(p, d)
-      case "CrossMirror" => new CrossMirror(p, d)
+      case "Conduit" => new FixedConduit(p, d)
+      case "Prism" => new FixedPrism(p, d)
+      case "Mirror" => new FixedMirror(p, d)
+      case "PartialMirror" => new FixedPartialMirror(p, d)
+      case "CrossMirror" => new FixedCrossMirror(p, d)
     }
     return g.asInstanceOf[A]
   }
@@ -132,6 +135,7 @@ object XMLable {
     override def fromXML: A = node2OrientedMoveableGate(n)
   }
 
+  // Moveable gates
   private def node2OrientedMoveableGate[A <: Gate with Oriented with Moveable](n: Node): A = {
     val p = getPosition(n)
     val d = getDirection(n)
@@ -150,8 +154,11 @@ object XMLable {
     def gateName: String = {
       val candidate = g.getClass.getSimpleName
       val mov = "Moveable"
-      if (candidate.startsWith(mov)) {
+      val fix = "Fixed"
+      if (g.isInstanceOf[Moveable] && candidate.startsWith(mov)) {
         candidate.substring(mov.length)
+      } else if (g.isInstanceOf[Fixed] && candidate.startsWith(fix)) {
+        candidate.substring(fix.length)
       } else {
         candidate
       }

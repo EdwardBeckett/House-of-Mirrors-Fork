@@ -141,7 +141,6 @@ class LightBox extends Panel {
           if (this.currentSelection.isDefined && releasePoint == this.currentSelection.get.position) {
             // Clicking current selection rotates it
             //assert (this.currentSelection.get.isInstanceOf[Moveable])
-            //publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
             publish(ClickEvent(releasePoint, MouseButtons.forEvent(e)))
           } else {
             // Clicking another (moveable) gate selects it
@@ -161,7 +160,6 @@ class LightBox extends Panel {
     } else if (this.isEmptyGesture) {
       this.isEmptyGesture = false
       if (this.dragStart == releasePoint) {
-        //publish(ClickEvent(releasePoint, if (e.peer.getButton == MouseEvent.BUTTON1) 0 else 1))
         publish(ClickEvent(releasePoint, MouseButtons.forEvent(e)))
       }
     }
@@ -403,6 +401,7 @@ class LightBox extends Panel {
       case x: Prism => new PrismWidget(x)
       case x: Conduit => new ConduitWidget(x)
       case x: WormHole => new WormHoleWidget(x)
+      case oops => println("No widget for gate: " + gate); throw new IllegalArgumentException
     }
   }
 

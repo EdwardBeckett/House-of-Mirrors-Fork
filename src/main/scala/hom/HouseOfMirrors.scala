@@ -6,7 +6,7 @@ object HouseApplication {
   def apperror(message: String): Nothing = throw new ApplicationException(message)
 
   val DefaultGamePack = "rowhouses/rowhouse.homp"
-
+  val DefaultStartLevel = 0
 }
 
 class ApplicationException(m: String) extends RuntimeException(m)
@@ -22,9 +22,10 @@ object HouseOfMirrors extends SwingApplication with HouseComponents with GameIO 
 
   var model = new GameModel(null, null, new GameHistory)
 
-  lazy val lightBox = ViewDefaults.lightBox
-  lazy val statusBar = ViewDefaults.statusBar
-  lazy val statusIcon = ViewDefaults.statusIcon
+  lazy val lightBoxMediator = new LightBoxMediator(ViewDefaults.lightBox)
+  lazy val statusBarMediator = new StatusBarMediator(ViewDefaults.statusBar)
+  lazy val statusIconMediator = new StatusIconMediator(ViewDefaults.statusIcon)
+  lazy val applicationMediator = new ApplicationMediator(frame)
 
   // creating frame also evaluates other components
   lazy val frame = new MainFrame {
@@ -39,31 +40,37 @@ object HouseOfMirrors extends SwingApplication with HouseComponents with GameIO 
       contents += (new Menu("Game") {
         contents += (new MenuItem(Action("Reset") { controller ! ResetLevel }))
       })
-      contents += (new MenuItem(Action("Help") { controller ! Help }))
+      contents += (new MenuItem(Action("Help") { lightBoxMediator.help }))
     }
     contents = new BoxPanel (Orientation.Horizontal) {
-      contents += lightBox
+      contents += lightBoxMediator.ui
       contents += new BoxPanel(Orientation.Vertical) {
-        contents += statusBar
-        contents += statusIcon
+        contents += statusBarMediator.statusBar
+        contents += statusIconMediator.statusIcon
       }
     }
   }
 
   override def startup(args: Array[String]) {
-
     construct()
-    val m1 = new LightBoxMediator(lightBox)
-    val m2 = new StatusBarMediator(statusBar)
-    val m3 = new StatusIconMediator(statusIcon)
-
     controller.start()
-    controller ! Start
+    val n = if (args.length > 0) {
+      try {
+        args(0).toInt
+      } catch {
+        case e: NumberFormatException => println("Ignoring: " + args(0)); -1
+      }
+    } else {
+      -1
+    }
+    val msg = if (n > 0) StartAt(n) else Start
+    controller ! msg
   }
 
   override def shutdown() {
     controller ! Stop
     loader ! Stop
+    HouseEventSource.shutdown()
     frame.dispose()
     Thread.sleep(100)
   }
@@ -73,7 +80,7 @@ object HouseOfMirrors extends SwingApplication with HouseComponents with GameIO 
     if (frame.size == new java.awt.Dimension(0,0)) frame.pack()
     frame.centerOnScreen()
     frame.visible = true
-    lightBox.requestFocus
+    lightBoxMediator.ui.requestFocus
   }
 }
 
@@ -99,6 +106,7 @@ object HouseEventSource {
   val x = Executors.newSingleThreadExecutor
   def shutdown() { x.shutdown() }
   def submit(s: () => Unit) { x.submit(new Runnable { override def run { s() }})}
+  //def submit(s: () => Unit) { s() }  // on client thread
 }
 
 class HouseEventSource[A <: HouseMessage] extends EventSource[A] {
@@ -113,6 +121,7 @@ trait ControllerComponents {
   val controller: GameController
   val loader: GameLoader
 
+  import HouseApplication._
   class GameController extends Actor {
 
     private[ControllerComponents] val emitter = new HouseEventSource[HouseMessage]
@@ -121,29 +130,41 @@ trait ControllerComponents {
     override def act() {
       loop {
         react {
-          case Start => println("Starting up"); loader ! LoadGamePackResource(HouseApplication.DefaultGamePack, Some(1))
-          case Stop => println("Controller: Shutting down"); HouseEventSource.shutdown(); exit()
-          case Help => emitter.raise(Help)
-          case PackLoaded(p) => model = model.copy(pack = p, history = new GameHistory); model.debug(); loadLevel(0, true)
-          case LevelLoaded(v) => model = model.copy(level = v); emitter.raise(LevelLoaded(v)); model.debug(); update()
+          case Start => println("Starting up"); loader ! LoadGamePackResource(HouseApplication.DefaultGamePack, None)
+          case StartAt(level) => println("Starting up at "+ level); loader ! LoadGamePackResource(DefaultGamePack, Some(level))
+          case Stop => println("Controller: Shutting down"); exit()
+          case PackLoaded(p, level) => model = model.copy(pack = p, history = new GameHistory); model.debug(); loadLevel(unlocked(level), true)
+          case LevelLoaded(level) => update(level, true)
+          case LevelUpdate(level) => update(level, false)
           case NextLevel => loadLevel(model.level.level + 1, true)
           case PreviousLevel => if (model.level.level > 0) loadLevel(model.level.level - 1, true)
           case ResetLevel => loadLevel(model.level.level, false)
-          case LevelUpdate => update()
           case unknown => println("Controller: Unhandled message: " + unknown)
         }
       }
     }
 
-    def update() {
+    def unlocked(level: Option[Int]): Int = {
+      val target = level.getOrElse(DefaultStartLevel).min(model.pack.numLevels)
+      // if pack is updated by unlocking the level, update the model
+      for (i <- 0 to target) model.pack.unlock(i) foreach {p: GamePack => model = model.copy(pack = p); println("Unlocking level "+ i)}
+      target
+    }
+
+    def update(level: GameLevel, isLoad: Boolean) {
+      model = model.copy(level = level)
+      if (isLoad) emitter.raise(LevelLoaded(level))
       val state: GameState = model.level.trace
       emitter.raise(TraceResult(state))
       if (state.status.isComplete) {
-        if (model.pack.unlockAll(model.level.level)) { println("New levels unlocked.") }
+        val u = model.pack.unlockAll(model.level.level);
+        u foreach { p: GamePack => model = model.copy(pack = p); println("New levels unlocked.") }
+        //if (model.pack.unlockAll(model.level.level)) { println("New levels unlocked.") }
         if (!model.history.hasGameLevel(model.level)) {
           model.history.putGameLevel(model.level)
         }
       }
+      model.debug()
     }
 
   /*
@@ -178,7 +199,7 @@ trait ControllerComponents {
     override def act() {
       loop {
         react {
-          case LoadGamePackResource(name, level) => reply(PackLoaded(GamePack(name)))
+          case LoadGamePackResource(name, level) => reply(PackLoaded(GamePack(name), level))
           case LoadGameLevelResource(resource, level) => reply(LevelLoaded(GameLevel(resource, level)))
           case OpenFile(f) => openFile(f)
           case SaveFile(f) => saveFile(f)
@@ -220,6 +241,33 @@ trait ControllerComponents {
           w => w.write(prettyPrinter.format(xml))
         }
       }
+    }
+  }
+
+  trait WithFileWriter {
+    import java.io._
+    import java.nio.charset.Charset
+    val charset: Charset = Charset.defaultCharset
+    
+    class Exceptions(primary: Throwable, secondary: Throwable*) extends Exception(primary) {
+      def all = secondary  
+    }
+
+    protected final def withWriter(f: File)(g: Writer => Unit) {
+      val w: Writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), charset))
+      var problem: Exception = null
+      try {
+        g(w)
+      } catch {
+        case e: Exception => problem = e
+      } finally {
+        try {
+          w.close()
+        } catch {
+          case e: java.io.IOException => problem = if (problem == null) e else new Exceptions(problem, e)
+        }
+      }
+      if (problem != null) throw problem
     }
   }
 
@@ -297,21 +345,22 @@ trait ModelComponents {
 sealed trait HouseMessage
 
 case object Start extends HouseMessage
+case class StartAt(level: Int) extends HouseMessage
 case object Stop extends HouseMessage
-case object Help extends HouseMessage
 case class ErrorMessage(message: String) extends HouseMessage
 case class LoadGamePackResource(name: String, level: Option[Int])
 case class LoadGameLevelResource(resource: Resource, level: Int)
 case class OpenFile(file: java.io.File)
 case class SaveFile(file: java.io.File)
 case class SaveGame(file: java.io.File)
-case class PackLoaded(pack: GamePack) extends HouseMessage
+case class PackLoaded(pack: GamePack, level: Option[Int] = None) extends HouseMessage
 case class LevelLoaded(level: GameLevel) extends HouseMessage
 case class TraceResult(state: GameState) extends HouseMessage
 case object PreviousLevel extends HouseMessage
 case object NextLevel extends HouseMessage
 case object ResetLevel extends HouseMessage
-case object LevelUpdate extends HouseMessage
+case class ProgressTo(level: Int) extends HouseMessage
+case class LevelUpdate(level: GameLevel) extends HouseMessage
 
 /**
  * A map of game levels externalized as XML.

@@ -27,6 +27,12 @@ object Directions extends Enumeration {
 
     def angle = (this.id - minId) * 45
     def angle(other: Direction): Int = mod(angle - other.angle, 360)
+    /** Angular difference in degrees, denoted by minus and angle bracket. */
+    def -<(that: Direction) = angle(that)
+
+    /** Test for parallel. */
+    def ?||(that: Direction) = isParallelTo(that)
+    def isParallelTo(that: Direction) = (this == that) || (reverse == that)
     
     // Enumeration.apply is final and not type-specific to Direction
     private def lookup(i: Int): Direction = Directions(i).asInstanceOf[Direction]
